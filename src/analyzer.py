@@ -2162,7 +2162,7 @@ class GeminiAnalyzer:
 
 - 所有 JSON 键名保持不变。
 - `decision_type` 必须保持为 `buy|hold|sell`。
-- 所有面向用户的人类可读文本值必须使用中文。
+- 所有面向用户的人类可读文本值必须使用中文。    
 """
 
     def _has_channel_config(self, config: Config) -> bool:
@@ -3597,6 +3597,10 @@ class GeminiAnalyzer:
                 json_str = self._fix_json_string(json_str)
                 
                 data = json.loads(json_str)
+                
+                # 💡 新增這兩行：容錯，如果 Kimi 把 dict 包在 list 裡面，強制脫掉外殼
+                if isinstance(data, list) and len(data) > 0:
+                 data = data[0]
 
                 # Schema validation (lenient: on failure, continue with raw dict)
                 try:
